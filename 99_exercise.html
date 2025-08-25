@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        height: 200vh;
+      }
+      #top-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none;
+      }
+      #top-btn.visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Web Storage</h2>
+      <section>
+        <input id="storage-key" placeholder="Key" />
+        <input id="storage-value" placeholder="Value" />
+        <button id="storage-save-btn">local Save</button>
+        <button id="storage-read-btn">local Read</button>
+        <p id="storage-result">결과창</p>
+      </section>
+      <h2>Location & History</h2>
+      <section>
+        <button id="pageMove">페이지 이동</button>
+        <button id="pageBack">뒤로 가기</button>
+      </section>
+      <h2>Clipboard</h2>
+      <section>
+        <p id="copyText">텍스트 복사</p>
+        <button id="clipBoard">복사하기</button>
+      </section>
+    </div>
+    <button id="top-btn">⬆ Top</button>
+    <script>
+      // 1. web storage
+      const keyInput = document.getElementById("storage-key");
+      const valueInput = document.getElementById("storage-value");
+      const result = document.getElementById("storage-result");
+      document
+        .querySelector("#storage-save-btn")
+        .addEventListener("click", () => {
+          const { value: key1 } = keyInput;
+          const { value: value1 } = valueInput;
+          if (key1 && value1) {
+            localStorage.setItem(key1, value1);
+          }
+        });
+      document
+        .querySelector("#storage-read-btn")
+        .addEventListener("click", () => {
+          const { value: key1 } = keyInput;
+          if (key1) {
+            const value1 = localStorage.getItem(key1);
+            valueInput.value = value1;
+            result.textContent = value1 || "값이 없습니다";
+          }
+        });
+      // 2. Location & History
+      document
+        .getElementById("pageMove")
+        .addEventListener(
+          "click",
+          () => (location.href = "https://www.google.com")
+        );
+      document
+        .getElementById("pageBack")
+        .addEventListener("click", () => history.back());
+
+      // 3. Clipboard API
+      document.getElementById("clipBoard").addEventListener("click", () => {
+        const text = document.getElementById("copyText").textContent;
+        navigator.clipboard.writeText(text).then(() => alert("복사 완료!"));
+      });
+
+      // 4. Scroll Event & Top Button
+      const topBtn = document.getElementById("top-btn");
+      window.addEventListener("scroll", () => {
+        console.log(window.scrollY);
+        if (window.scrollY > 300) {
+          topBtn.classList.add("visible");
+        } else {
+          topBtn.classList.remove("visible");
+        }
+      });
+      topBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>
